@@ -15,13 +15,13 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
 
 const cowsay = require('cowsay');
-const Quote = require('inspirational-quotes')
+const Quote = require('inspirational-quotes');
 
 server.get('/cowspiration', (req, res) => {
   const { text, author } = Quote.getQuote();
 
   const cow = cowsay.say({
-    text: `${ text }\n\n- ${ author }`,
+    text: `${text}\n\n- ${author}`,
     W: 80,
   });
 
@@ -35,22 +35,8 @@ server.post('/job-search', async (req, res) => {
     const { description, fulltime } = req.body;
 
     const URL = `https://jobs.github.com/positions.json?${
-      description ? `description=${ description }&` : ''
-    }${
-      fulltime ? 'fulltime=on' : ''
-    }`;
-
-    const { data } = await axios.get(URL);
-    res.send({ results: data });
-  } catch (error) {
-    res.send({ error })
-  }
-});
-
-server.get('/weather', async (req, res) => {
-  try {
-    const { lat, lon } = req.query;
-    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${ lat }&lon=${ lon }&appid=${ WEATHER_KEY }`;
+      description ? `description=${description}&` : ''
+    }${fulltime ? 'fulltime=on' : ''}`;
 
     const { data } = await axios.get(URL);
     res.send({ results: data });
@@ -59,7 +45,19 @@ server.get('/weather', async (req, res) => {
   }
 });
 
-server.listen(3000, () => {
+server.get('/weather', async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_KEY}`;
+
+    const { data } = await axios.get(URL);
+    res.send({ results: data });
+  } catch (error) {
+    res.send({ error });
+  }
+});
+
+server.listen(PORT, () => {
   console.log('I am listening...');
 });
 
